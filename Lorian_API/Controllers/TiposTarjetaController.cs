@@ -2,9 +2,9 @@
 using ENTITIES.Entities;
 using FluentValidation.Results;
 using LOGIC.Services;
-using Lorian_API.DTOs;
+using ENTITIES.DTOs;
 using Lorian_API.Helpers;
-using Lorian_API.Validators;
+using LOGIC.Validators;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -109,6 +109,7 @@ namespace Lorian_API.Controllers
             }
 
             var tipoTarjeta = _mapper.Map<TipoTarjeta>(tipoTarjetaUpdateDTO);
+            var tipoTarjetaExists = await ElementExistsService.TipoTarjetaExists(id);
             if (file.file != null)
             {
                 string tipoArchivo = Archivo.ObtenerTipoArchivo(file.file.FileName);
@@ -116,10 +117,9 @@ namespace Lorian_API.Controllers
             }
             else
             {
-                tipoTarjeta.RutaImagen = "";
-            }
-
-            var tipoTarjetaResult = await _tipoTarjetaService.ReadTipoTarjeta(id);
+                tipoTarjeta.RutaImagen = (tipoTarjetaExists != null) ? tipoTarjetaExists.RutaImagen : "";
+            } 
+            
             var result = await _tipoTarjetaService.UpdateTipoTarjeta(id, tipoTarjeta);
             switch (result.Success)
             {
@@ -127,9 +127,9 @@ namespace Lorian_API.Controllers
 
                     if (result.ResultSet)
                     {
-                        if (tipoTarjetaResult.ResultSet != null)
+                        if (tipoTarjetaExists != null)
                         {
-                            Archivo.Eliminar(tipoTarjetaResult.ResultSet.RutaImagen);
+                            Archivo.Eliminar(tipoTarjetaExists.RutaImagen);
                             await Archivo.Guardar(tipoTarjeta.RutaImagen, file.file);
                         }
                         return Ok(result);
@@ -147,16 +147,16 @@ namespace Lorian_API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTipoTarjeta(int id)
         {
-            var tipoTarjetaResult = await _tipoTarjetaService.ReadTipoTarjeta(id);
+            var tipoTarjetaExists = await ElementExistsService.TipoTarjetaExists(id);
             var result = await _tipoTarjetaService.DeleteTipoTarjeta(id);
             switch (result.Success)
             {
                 case true:
                     if (result.ResultSet)
                     {
-                        if (tipoTarjetaResult.ResultSet != null)
+                        if (tipoTarjetaExists != null)
                         {
-                            Archivo.Eliminar(tipoTarjetaResult.ResultSet.RutaImagen);
+                            Archivo.Eliminar(tipoTarjetaExists.RutaImagen);
                         }
                         return Ok(result);
                     }

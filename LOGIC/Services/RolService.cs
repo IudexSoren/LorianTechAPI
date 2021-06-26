@@ -10,7 +10,7 @@ namespace LOGIC.Services
 {
     public class RolService
     {
-        private readonly RolRepo _promocionRepo = new RolRepo();
+        private readonly RolRepo _rolRepo = new RolRepo();
 
         public async Task<Generic_ResultSet<bool>> CreateRol(Rol rol)
         {
@@ -20,7 +20,7 @@ namespace LOGIC.Services
                 rol.CreationDate = DateTime.UtcNow;
                 rol.ModifiedDate = DateTime.UtcNow;
 
-                bool state = await _promocionRepo.Create(rol);
+                bool state = await _rolRepo.Create(rol);
 
                 result.UserMessage = state ?
                     $"El rol { rol.Nombre } fue creado corretamente" : $"El rol no pudo crearse";
@@ -43,7 +43,7 @@ namespace LOGIC.Services
             Generic_ResultSet<Rol> result = new Generic_ResultSet<Rol>();
             try
             {
-                Rol rol = await _promocionRepo.Read(id);
+                Rol rol = await _rolRepo.Read(id);
 
                 result.UserMessage = rol != null ?
                     $"El rol { rol.Nombre } fue obtenido corretamente" : $"El rol solicitado no existe";
@@ -66,12 +66,12 @@ namespace LOGIC.Services
             Generic_ResultSet<List<Rol>> result = new Generic_ResultSet<List<Rol>>();
             try
             {
-                List<Rol> promocions = await _promocionRepo.ReadAll();
+                List<Rol> rols = await _rolRepo.ReadAll();
 
                 result.UserMessage = $"La lista de roles fue obtenida corretamente";
                 result.InternalMessage = $"LOGIC.Services.RolService: ReadAllRol() method executed successfully";
                 result.Success = true;
-                result.ResultSet = promocions;
+                result.ResultSet = rols;
             }
             catch (Exception exception)
             {
@@ -90,7 +90,7 @@ namespace LOGIC.Services
             {
                 rol.ModifiedDate = DateTime.UtcNow;
 
-                bool state = await _promocionRepo.Update(id, rol);
+                bool state = await _rolRepo.Update(id, rol);
 
                 result.UserMessage = state ?
                     $"El rol { rol.Nombre } fue actualizado corretamente" : $"El rol solicitado no existe";
@@ -113,7 +113,7 @@ namespace LOGIC.Services
             Generic_ResultSet<bool> result = new Generic_ResultSet<bool>();
             try
             {
-                bool state = await _promocionRepo.Delete(id);
+                bool state = await _rolRepo.Delete(id);
 
                 result.UserMessage = state ?
                     $"El rol fue eliminado corretamente" : $"El rol solicitado no existe";

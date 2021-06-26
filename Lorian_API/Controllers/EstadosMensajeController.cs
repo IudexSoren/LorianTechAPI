@@ -2,9 +2,9 @@
 using ENTITIES.Entities;
 using FluentValidation.Results;
 using LOGIC.Services;
-using Lorian_API.DTOs;
+using ENTITIES.DTOs;
 using Lorian_API.Helpers;
-using Lorian_API.Validators.EstadoMensaje;
+using LOGIC.Validators;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;

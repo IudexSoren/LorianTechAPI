@@ -15,10 +15,13 @@ namespace ENTITIES.Entities
         public string RutaImagen { get; set; }
         public int Inventario { get; set; }
         public string Garantia { get; set; }
-        public double Precio { get; set; }
+        public decimal Precio { get; set; }
 
-        public TipoComponente Tipo { get; set; }
+        public TipoComponente TipoComponente { get; set; }
         public Marca Marca { get; set; }
         public EstadoComponente Estado { get; set; }
+
+        public List<Caracteristica> Caracteristicas { get; set; }
+        public List<Promocion> Promociones { get; set; }
     }
 }

@@ -2,9 +2,9 @@
 using ENTITIES.Entities;
 using FluentValidation.Results;
 using LOGIC.Services;
-using Lorian_API.DTOs;
+using ENTITIES.DTOs;
 using Lorian_API.Helpers;
-using Lorian_API.Validators;
+using LOGIC.Validators;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -109,17 +109,16 @@ namespace Lorian_API.Controllers
             }
 
             var marca = _mapper.Map<Marca>(marcaUpdateDTO);
+            var marcaExists = await ElementExistsService.MarcaExists(id);
             if (file.file != null)
             {
                 string tipoArchivo = Archivo.ObtenerTipoArchivo(file.file.FileName);
                 marca.RutaImagen = Archivo.GenerarRutaArchivo(marca.Nombre, "Marca", tipoArchivo);
-            }
-            else
+            } else
             {
-                marca.RutaImagen = "";
+                marca.RutaImagen = (marcaExists != null) ? marcaExists.RutaImagen : "";
             }
 
-            var marcaResult = await _marcaService.ReadMarca(id);
             var result = await _marcaService.UpdateMarca(id, marca);
             switch (result.Success)
             {
@@ -127,9 +126,9 @@ namespace Lorian_API.Controllers
 
                     if (result.ResultSet)
                     {
-                        if (marcaResult.ResultSet != null)
+                        if (marcaExists != null)
                         {
-                            Archivo.Eliminar(marcaResult.ResultSet.RutaImagen);
+                            Archivo.Eliminar(marcaExists.RutaImagen);
                             await Archivo.Guardar(marca.RutaImagen, file.file);
                         }
                         return Ok(result);
@@ -147,16 +146,16 @@ namespace Lorian_API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMarca(int id)
         {
-            var marcaResult = await _marcaService.ReadMarca(id);
+            var marcaExists = await ElementExistsService.MarcaExists(id);
             var result = await _marcaService.DeleteMarca(id);
             switch (result.Success)
             {
                 case true:
                     if (result.ResultSet)
                     {
-                        if (marcaResult.ResultSet != null)
+                        if (marcaExists != null)
                         {
-                            Archivo.Eliminar(marcaResult.ResultSet.RutaImagen);
+                            Archivo.Eliminar(marcaExists.RutaImagen);
                         }
                         return Ok(result);
                     }
@@ -169,6 +168,5 @@ namespace Lorian_API.Controllers
                     return StatusCode(500, result);
             }
         }
-
     }
 }

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using ENTITIES.Entities;
-using Lorian_API.DTOs;
+using ENTITIES.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;

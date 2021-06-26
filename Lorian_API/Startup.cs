@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Lorian_API
@@ -43,6 +44,7 @@ namespace Lorian_API
 
             #region Custom services
             services.AddScoped<CaracteristicaService>();
+            services.AddScoped<ComponenteService>();
             services.AddScoped<ConversacionService>();
             services.AddScoped<EstadoComponenteService>();
             services.AddScoped<EstadoEnvioService>();
