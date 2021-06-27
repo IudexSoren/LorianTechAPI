@@ -17,5 +17,7 @@ namespace ENTITIES.DTOs
         public TipoComponente TipoComponente { get; set; }
         public Marca Marca { get; set; }
         public EstadoComponente EstadoComponente { get; set; }
+        public List<Caracteristica> Caracteristicas { get; set; }
+        public List<Promocion> Promociones { get; set; }
     }
 }

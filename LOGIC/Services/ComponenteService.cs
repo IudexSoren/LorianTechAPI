@@ -20,7 +20,7 @@ namespace LOGIC.Services
             this._mapper = mapper;
         }
 
-        public async Task<Generic_ResultSet<bool>> CreateComponente(Componente componente)
+        public async Task<Generic_ResultSet<bool>> CreateComponente(Componente componente, List<int> idsCaracteristicas, List<int> idsPromociones)
         {
             Generic_ResultSet<bool> result = new Generic_ResultSet<bool>();
             try
@@ -28,7 +28,7 @@ namespace LOGIC.Services
                 componente.CreationDate = DateTime.UtcNow;
                 componente.ModifiedDate = DateTime.UtcNow;
 
-                bool state = await _componenteRepo.Create(componente);
+                bool state = await _componenteRepo.Create(componente, idsCaracteristicas, idsPromociones);
 
                 result.UserMessage = state ?
                     $"El componente { componente.Nombre } fue creado corretamente" : $"El componente no pudo crearse";
@@ -53,9 +53,24 @@ namespace LOGIC.Services
             {
                 Componente componente = await _componenteRepo.Read(id);
                 DTOComponenteRead dtoComponente = _mapper.Map<DTOComponenteRead>(componente);
-                dtoComponente.TipoComponente = await ElementExistsService.TipoComponenteExists(componente.IdTipoComponente);
-                dtoComponente.Marca = await ElementExistsService.MarcaExists(componente.IdMarca);
-                dtoComponente.EstadoComponente = await ElementExistsService.EstadoComponenteExists(componente.IdEstadoComponente);
+                if (componente != null)
+                {
+                    dtoComponente.TipoComponente = await ElementExistsService.TipoComponenteExists(componente.IdTipoComponente);
+                    dtoComponente.Marca = await ElementExistsService.MarcaExists(componente.IdMarca);
+                    dtoComponente.EstadoComponente = await ElementExistsService.EstadoComponenteExists(componente.IdEstadoComponente);
+                    Caracteristica_ComponenteRepo ccr = new Caracteristica_ComponenteRepo();
+                    List<Caracteristica_Componente> caracteristicasActuales = await ccr.ReadAllByIdComponente(id);
+                    foreach (var categoria in caracteristicasActuales)
+                    {
+                        dtoComponente.Caracteristicas.Add(await ElementExistsService.CaracteristicaExists(categoria.IdCaracteristica));
+                    }
+                    Promocion_ComponenteRepo pcr = new Promocion_ComponenteRepo();
+                    List<Promocion_Componente> promocionesActuales = await pcr.ReadAllByIdComponente(id);
+                    foreach (var promocion in promocionesActuales)
+                    {
+                        dtoComponente.Promociones.Add(await ElementExistsService.PromocionExists(promocion.IdPromocion));
+                    }
+                }
 
                 result.UserMessage = componente != null ?
                     $"El componente { componente.Nombre } fue obtenido corretamente" : $"El componente solicitado no existe";
@@ -91,6 +106,18 @@ namespace LOGIC.Services
                     dtoComponente.TipoComponente = await ElementExistsService.TipoComponenteExists(componente.IdTipoComponente);
                     dtoComponente.Marca = await ElementExistsService.MarcaExists(componente.IdMarca);
                     dtoComponente.EstadoComponente = await ElementExistsService.EstadoComponenteExists(componente.IdEstadoComponente);
+                    Caracteristica_ComponenteRepo ccr = new Caracteristica_ComponenteRepo();
+                    List<Caracteristica_Componente> caracteristicasActuales = await ccr.ReadAllByIdComponente(componente.Id);
+                    foreach (var categoria in caracteristicasActuales)
+                    {
+                        dtoComponente.Caracteristicas.Add(await ElementExistsService.CaracteristicaExists(categoria.IdCaracteristica));
+                    }
+                    Promocion_ComponenteRepo pcr = new Promocion_ComponenteRepo();
+                    List<Promocion_Componente> promocionesActuales = await pcr.ReadAllByIdComponente(componente.Id);
+                    foreach (var promocion in promocionesActuales)
+                    {
+                        dtoComponente.Promociones.Add(await ElementExistsService.PromocionExists(promocion.IdPromocion));
+                    }
                     dtoListComponente.Add(dtoComponente);
                 }
 
@@ -109,14 +136,14 @@ namespace LOGIC.Services
             return result;
         }
 
-        public async Task<Generic_ResultSet<bool>> UpdateComponente(int id, Componente componente)
+        public async Task<Generic_ResultSet<bool>> UpdateComponente(int id, Componente componente, List<int> idsCaracteristicas, List<int> idsPromociones)
         {
             Generic_ResultSet<bool> result = new Generic_ResultSet<bool>();
             try
             {
                 componente.ModifiedDate = DateTime.UtcNow;
 
-                bool state = await _componenteRepo.Update(id, componente);
+                bool state = await _componenteRepo.Update(id, componente, idsCaracteristicas, idsPromociones);
 
                 result.UserMessage = state ?
                     $"El componente { componente.Nombre } fue actualizado corretamente" : $"El componente solicitado no existe";

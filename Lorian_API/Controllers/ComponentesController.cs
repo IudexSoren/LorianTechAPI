@@ -83,7 +83,7 @@ namespace Lorian_API.Controllers
                 componente.RutaImagen = "";
             }
 
-            var result = await _componenteService.CreateComponente(componente);
+            var result = await _componenteService.CreateComponente(componente, componenteCreateDTO.IdsCaracteristicas, componenteCreateDTO.IdsPromociones);
             switch (result.Success)
             {
                 case true:
@@ -120,7 +120,7 @@ namespace Lorian_API.Controllers
                 componente.RutaImagen = (componenteExists != null) ? componenteExists.RutaImagen : "";
             }
 
-            var result = await _componenteService.UpdateComponente(id, componente);
+            var result = await _componenteService.UpdateComponente(id, componente, componenteUpdateDTO.IdsCaracteristicas, componenteUpdateDTO.IdsPromociones);
             switch (result.Success)
             {
                 case true:
