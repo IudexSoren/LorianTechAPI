@@ -126,5 +126,33 @@ namespace LOGIC.Services
 
             return result;
         }
+
+        public async static Task<EstadoUsuario> ReadSimple(int id)
+        {
+            try
+            {
+                EstadoUsuario estado = await new EstadoUsuarioRepo().Read(id);
+
+                return estado;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+        }
+
+        public async static Task<List<EstadoUsuario>> ReadAllSimple()
+        {
+            try
+            {
+                List<EstadoUsuario> estados = await new EstadoUsuarioRepo().ReadAll();
+
+                return estados;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+        }
     }
 }

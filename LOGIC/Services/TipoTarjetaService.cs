@@ -130,5 +130,33 @@ namespace LOGIC.Services
 
             return result;
         }
+
+        public async static Task<TipoTarjeta> ReadSimple(int id)
+        {
+            try
+            {
+                TipoTarjeta tipoTarjeta = await new TipoTarjetaRepo().Read(id);
+
+                return tipoTarjeta;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+        }
+
+        public async static Task<List<TipoTarjeta>> ReadAllSimple()
+        {
+            try
+            {
+                List<TipoTarjeta> tipos = await new TipoTarjetaRepo().ReadAll();
+
+                return tipos;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+        }
     }
 }

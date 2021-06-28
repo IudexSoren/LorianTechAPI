@@ -119,7 +119,6 @@ namespace DAL.Repositories
             command.Parameters.AddWithValue("@EmailVerificado", updatedObject.EmailVerificado);
             command.Parameters.AddWithValue("@ModifiedDate", updatedObject.ModifiedDate);
             command.Parameters.AddWithValue("@IdEstadoUsuario", updatedObject.IdEstadoUsuario);
-            command.Parameters.AddWithValue("@IdRol", updatedObject.IdRol);
             bool state = Convert.ToBoolean(await command.ExecuteNonQueryAsync());
 
             return state;

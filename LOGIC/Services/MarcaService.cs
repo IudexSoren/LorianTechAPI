@@ -131,5 +131,33 @@ namespace LOGIC.Services
 
             return result;
         }
+
+        public async static Task<Marca> ReadSimple(int id)
+        {
+            try
+            {
+                Marca marca = await new MarcaRepo().Read(id);
+
+                return marca;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+        }
+
+        public async static Task<List<Marca>> ReadAllSimple()
+        {
+            try
+            {
+                List<Marca> marcas = await new MarcaRepo().ReadAll();
+
+                return marcas;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+        }
     }
 }

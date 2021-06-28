@@ -52,24 +52,10 @@ namespace LOGIC.Services
             try
             {
                 Componente componente = await _componenteRepo.Read(id);
-                DTOComponenteRead dtoComponente = _mapper.Map<DTOComponenteRead>(componente);
+                DTOComponenteRead dtoComponente = null;
                 if (componente != null)
                 {
-                    dtoComponente.TipoComponente = await ElementExistsService.TipoComponenteExists(componente.IdTipoComponente);
-                    dtoComponente.Marca = await ElementExistsService.MarcaExists(componente.IdMarca);
-                    dtoComponente.EstadoComponente = await ElementExistsService.EstadoComponenteExists(componente.IdEstadoComponente);
-                    Caracteristica_ComponenteRepo ccr = new Caracteristica_ComponenteRepo();
-                    List<Caracteristica_Componente> caracteristicasActuales = await ccr.ReadAllByIdComponente(id);
-                    foreach (var categoria in caracteristicasActuales)
-                    {
-                        dtoComponente.Caracteristicas.Add(await ElementExistsService.CaracteristicaExists(categoria.IdCaracteristica));
-                    }
-                    Promocion_ComponenteRepo pcr = new Promocion_ComponenteRepo();
-                    List<Promocion_Componente> promocionesActuales = await pcr.ReadAllByIdComponente(id);
-                    foreach (var promocion in promocionesActuales)
-                    {
-                        dtoComponente.Promociones.Add(await ElementExistsService.PromocionExists(promocion.IdPromocion));
-                    }
+                    dtoComponente = await CreateDTOComponente(componente);
                 }
 
                 result.UserMessage = componente != null ?
@@ -102,23 +88,7 @@ namespace LOGIC.Services
                 List<DTOComponenteRead> dtoListComponente = new List<DTOComponenteRead>();
                 foreach (var componente in componentes)
                 {
-                    DTOComponenteRead dtoComponente = _mapper.Map<DTOComponenteRead>(componente);
-                    dtoComponente.TipoComponente = await ElementExistsService.TipoComponenteExists(componente.IdTipoComponente);
-                    dtoComponente.Marca = await ElementExistsService.MarcaExists(componente.IdMarca);
-                    dtoComponente.EstadoComponente = await ElementExistsService.EstadoComponenteExists(componente.IdEstadoComponente);
-                    Caracteristica_ComponenteRepo ccr = new Caracteristica_ComponenteRepo();
-                    List<Caracteristica_Componente> caracteristicasActuales = await ccr.ReadAllByIdComponente(componente.Id);
-                    foreach (var categoria in caracteristicasActuales)
-                    {
-                        dtoComponente.Caracteristicas.Add(await ElementExistsService.CaracteristicaExists(categoria.IdCaracteristica));
-                    }
-                    Promocion_ComponenteRepo pcr = new Promocion_ComponenteRepo();
-                    List<Promocion_Componente> promocionesActuales = await pcr.ReadAllByIdComponente(componente.Id);
-                    foreach (var promocion in promocionesActuales)
-                    {
-                        dtoComponente.Promociones.Add(await ElementExistsService.PromocionExists(promocion.IdPromocion));
-                    }
-                    dtoListComponente.Add(dtoComponente);
+                    dtoListComponente.Add(await CreateDTOComponente(componente));
                 }
 
                 result.UserMessage = $"La lista de componentes fue obtenida corretamente";
@@ -182,6 +152,59 @@ namespace LOGIC.Services
             }
 
             return result;
+        }
+
+        public async static Task<Componente> ReadSimple(int id)
+        {
+            try
+            {
+                Componente componente = await new ComponenteRepo().Read(id);
+
+                return componente;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+        }
+
+        public async static Task<List<Componente>> ReadAllSimple()
+        {
+            try
+            {
+                List<Componente> componentes = await new ComponenteRepo().ReadAll();
+
+                return componentes;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+        }
+
+        private async Task<DTOComponenteRead> CreateDTOComponente(Componente componente)
+        {
+            DTOComponenteRead dtoComponente = _mapper.Map<DTOComponenteRead>(componente);
+
+            dtoComponente.TipoComponente = await TipoComponenteService.ReadSimple(componente.IdTipoComponente);
+            dtoComponente.Marca = await MarcaService.ReadSimple(componente.IdMarca);
+            dtoComponente.EstadoComponente = await EstadoComponenteService.ReadSimple(componente.IdEstadoComponente);
+
+            Caracteristica_ComponenteRepo ccr = new Caracteristica_ComponenteRepo();
+            List<Caracteristica_Componente> caracteristicasActuales = await ccr.ReadAllByIdComponente(componente.Id);
+            foreach (var categoria in caracteristicasActuales)
+            {
+                dtoComponente.Caracteristicas.Add(await CaracteristicaService.ReadSimple(categoria.IdCaracteristica));
+            }
+
+            Promocion_ComponenteRepo pcr = new Promocion_ComponenteRepo();
+            List<Promocion_Componente> promocionesActuales = await pcr.ReadAllByIdComponente(componente.Id);
+            foreach (var promocion in promocionesActuales)
+            {
+                dtoComponente.Promociones.Add(await PromocionService.ReadSimple(promocion.IdPromocion));
+            }
+
+            return dtoComponente;
         }
     }
 }

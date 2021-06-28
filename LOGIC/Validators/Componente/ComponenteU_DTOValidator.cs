@@ -26,7 +26,7 @@ namespace LOGIC.Validators
             RuleFor(cc => cc.IdTipoComponente)
                 .NotEmpty().WithMessage("El tipo de componente es un dato requerido")
                 .MustAsync(async (id, cancellation) => {
-                    var res = await ElementExistsService.TipoComponenteExists(id);
+                    var res = await TipoComponenteService.ReadSimple(id);
 
                     return res != null;
                 })
@@ -36,7 +36,7 @@ namespace LOGIC.Validators
                 .NotEmpty().WithMessage("La marca es un dato requerido")
                 .MustAsync(async (id, cancellation) =>
                 {
-                    var res = await ElementExistsService.MarcaExists(id);
+                    var res = await MarcaService.ReadSimple(id);
 
                     return res != null;
                 })
@@ -45,7 +45,7 @@ namespace LOGIC.Validators
             RuleFor(cc => cc.IdEstadoComponente)
                 .NotEmpty().WithMessage("El estado del componente es un dato requerido")
                 .MustAsync(async (id, cancellation) => {
-                    var res = await ElementExistsService.EstadoComponenteExists(id);
+                    var res = await EstadoComponenteService.ReadSimple(id);
 
                     return res != null;
                 })
@@ -53,7 +53,7 @@ namespace LOGIC.Validators
 
             RuleForEach(cc => cc.IdsCaracteristicas)
                 .MustAsync(async (id, cancellation) => {
-                    var res = await ElementExistsService.CaracteristicaExists(id);
+                    var res = await CaracteristicaService.ReadSimple(id);
 
                     return res != null;
                 })
@@ -61,7 +61,7 @@ namespace LOGIC.Validators
 
             RuleForEach(cc => cc.IdsPromociones)
                 .MustAsync(async (id, cancellation) => {
-                    var res = await ElementExistsService.PromocionExists(id);
+                    var res = await PromocionService.ReadSimple(id);
 
                     return res != null;
                 })

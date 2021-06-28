@@ -125,5 +125,33 @@ namespace LOGIC.Services
 
             return result;
         }
+
+        public async static Task<TipoUsuarioMensaje> ReadSimple(int id)
+        {
+            try
+            {
+                TipoUsuarioMensaje tipoUsuarioMensaje = await new TipoUsuarioMensajeRepo().Read(id);
+
+                return tipoUsuarioMensaje;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+        }
+
+        public async static Task<List<TipoUsuarioMensaje>> ReadAllSimple()
+        {
+            try
+            {
+                List<TipoUsuarioMensaje> tipos = await new TipoUsuarioMensajeRepo().ReadAll();
+
+                return tipos;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+        }
     }
 }

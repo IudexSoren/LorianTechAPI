@@ -109,7 +109,7 @@ namespace Lorian_API.Controllers
             }
 
             var marca = _mapper.Map<Marca>(marcaUpdateDTO);
-            var marcaExists = await ElementExistsService.MarcaExists(id);
+            var marcaExists = await MarcaService.ReadSimple(id);
             if (file.file != null)
             {
                 string tipoArchivo = Archivo.ObtenerTipoArchivo(file.file.FileName);
@@ -146,7 +146,7 @@ namespace Lorian_API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMarca(int id)
         {
-            var marcaExists = await ElementExistsService.MarcaExists(id);
+            var marcaExists = await MarcaService.ReadSimple(id);
             var result = await _marcaService.DeleteMarca(id);
             switch (result.Success)
             {

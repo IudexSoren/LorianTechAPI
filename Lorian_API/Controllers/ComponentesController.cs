@@ -109,7 +109,7 @@ namespace Lorian_API.Controllers
             }
 
             var componente = _mapper.Map<Componente>(componenteUpdateDTO);
-            var componenteExists = await ElementExistsService.ComponenteExists(id);
+            var componenteExists = await ComponenteService.ReadSimple(id);
             if (file.file != null)
             {
                 string tipoArchivo = Archivo.ObtenerTipoArchivo(file.file.FileName);
@@ -147,7 +147,7 @@ namespace Lorian_API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteComponente(int id)
         {
-            var componenteExists = await ElementExistsService.ComponenteExists(id);
+            var componenteExists = await ComponenteService.ReadSimple(id);
             var result = await _componenteService.DeleteComponente(id);
             switch (result.Success)
             {

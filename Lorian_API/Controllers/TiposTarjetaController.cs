@@ -109,7 +109,7 @@ namespace Lorian_API.Controllers
             }
 
             var tipoTarjeta = _mapper.Map<TipoTarjeta>(tipoTarjetaUpdateDTO);
-            var tipoTarjetaExists = await ElementExistsService.TipoTarjetaExists(id);
+            var tipoTarjetaExists = await TipoTarjetaService.ReadSimple(id);
             if (file.file != null)
             {
                 string tipoArchivo = Archivo.ObtenerTipoArchivo(file.file.FileName);
@@ -147,7 +147,7 @@ namespace Lorian_API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTipoTarjeta(int id)
         {
-            var tipoTarjetaExists = await ElementExistsService.TipoTarjetaExists(id);
+            var tipoTarjetaExists = await TipoTarjetaService.ReadSimple(id);
             var result = await _tipoTarjetaService.DeleteTipoTarjeta(id);
             switch (result.Success)
             {

@@ -56,6 +56,7 @@ namespace Lorian_API
             services.AddScoped<TipoComponenteService>();
             services.AddScoped<TipoTarjetaService>();
             services.AddScoped<TipoUsuarioMensajeService>();
+            services.AddScoped<UsuarioService>();
             #endregion
 
             #region CORS

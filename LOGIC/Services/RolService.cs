@@ -130,5 +130,33 @@ namespace LOGIC.Services
 
             return result;
         }
+
+        public async static Task<Rol> ReadSimple(int id)
+        {
+            try
+            {
+                Rol rol = await new RolRepo().Read(id);
+
+                return rol;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+        }
+
+        public async static Task<List<Rol>> ReadAllSimple()
+        {
+            try
+            {
+                List<Rol> roles = await new RolRepo().ReadAll();
+
+                return roles;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+        }
     }
 }

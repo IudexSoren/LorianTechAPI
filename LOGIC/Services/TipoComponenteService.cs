@@ -131,5 +131,33 @@ namespace LOGIC.Services
 
             return result;
         }
+
+        public async static Task<TipoComponente> ReadSimple(int id)
+        {
+            try
+            {
+                TipoComponente tipoComponente = await new TipoComponenteRepo().Read(id);
+
+                return tipoComponente;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+        }
+
+        public async static Task<List<TipoComponente>> ReadAllSimple()
+        {
+            try
+            {
+                List<TipoComponente> tipos = await new TipoComponenteRepo().ReadAll();
+
+                return tipos;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+        }
     }
 }

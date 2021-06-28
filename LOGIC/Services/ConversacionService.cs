@@ -130,5 +130,33 @@ namespace LOGIC.Services
 
             return result;
         }
+
+        public async static Task<Conversacion> ReadSimple(int id)
+        {
+            try
+            {
+                Conversacion conversacion = await new ConversacionRepo().Read(id);
+
+                return conversacion;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+        }
+
+        public async static Task<List<Conversacion>> ReadAllSimple()
+        {
+            try
+            {
+                List<Conversacion> conversaciones = await new ConversacionRepo().ReadAll();
+
+                return conversaciones;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+        }
     }
 }

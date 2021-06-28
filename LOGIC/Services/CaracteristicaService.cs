@@ -130,5 +130,33 @@ namespace LOGIC.Services
 
             return result;
         }
+
+        public async static Task<Caracteristica> ReadSimple(int id)
+        {
+            try
+            {
+                Caracteristica caracteristica = await new CaracteristicaRepo().Read(id);
+
+                return caracteristica;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+        }
+
+        public async static Task<List<Caracteristica>> ReadAllSimple()
+        {
+            try
+            {
+                List<Caracteristica> caracteristicas = await new CaracteristicaRepo().ReadAll();
+
+                return caracteristicas;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+        }
     }
 }
