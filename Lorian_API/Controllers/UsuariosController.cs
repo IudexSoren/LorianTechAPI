@@ -5,6 +5,7 @@ using FluentValidation.Results;
 using LOGIC.Services;
 using LOGIC.Validators;
 using Lorian_API.Helpers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -12,9 +13,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Lorian_API.Contusuariolers
+namespace Lorian_API.Controllers
 {
-    [Route("api/[contusuarioler]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class UsuariosController : ControllerBase
     {
@@ -48,6 +49,7 @@ namespace Lorian_API.Contusuariolers
             }
         }
 
+        //[Authorize(Roles = "Administrador, Despachador, Cliente")]
         [HttpGet]
         public async Task<IActionResult> GetAllUsuario()
         {
@@ -62,7 +64,7 @@ namespace Lorian_API.Contusuariolers
             }
         }
 
-        [HttpPost]
+        [HttpPut]
         public async Task<IActionResult> UpdateUsuario(int id, DTOUsuarioUpdate usuarioUpdateDTO)
         {
             UsuarioU_DTOValidator validator = new UsuarioU_DTOValidator();

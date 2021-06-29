@@ -34,8 +34,8 @@ namespace LOGIC.Validators
                 .MaximumLength(100).WithMessage("El nombre no debe exceder los 100 caracteres. Actual: {PropertyValue}");
             
             RuleFor(uc => uc.Apellido)
-                .NotEmpty().WithMessage("El nombre es un dato requerido")
-                .MaximumLength(100).WithMessage("El nombre no debe exceder los 100 caracteres. Actual: {PropertyValue}");
+                .NotEmpty().WithMessage("El apellido es un dato requerido")
+                .MaximumLength(100).WithMessage("El apellido no debe exceder los 100 caracteres. Actual: {PropertyValue}");
 
             RuleFor(uc => uc.Clave)
                 .Cascade(CascadeMode.Stop)
@@ -46,7 +46,7 @@ namespace LOGIC.Validators
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty().WithMessage("Debe confirmar su contraseña")
                 .Length(8, 32).WithMessage("La contraseña de confirmación debe ser de almenos 8 caracteres y no debe exceder los 32 caracteres")
-                .Matches(uc => uc.Clave).WithMessage("Las contraseñas no coinciden");
+                .Must((uc, confClave) => confClave.Equals(uc.Clave)).WithMessage("Las contraseñas no coinciden");
 
             RuleFor(uc => uc.IdRol)
                 .Cascade(CascadeMode.Stop)

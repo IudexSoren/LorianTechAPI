@@ -2,6 +2,7 @@
 using DAL.Repositories;
 using ENTITIES.DTOs;
 using ENTITIES.Entities;
+using LOGIC.LogicEntities;
 using LOGIC.Models;
 using System;
 using System.Collections.Generic;
@@ -25,20 +26,23 @@ namespace LOGIC.Services
             Generic_ResultSet<bool> result = new Generic_ResultSet<bool>();
             try
             {
+                UsuarioLogic usuarioLogic = new UsuarioLogic();
+                usuario.Clave = usuarioLogic.EncriptarClave(usuario.Clave);
+                usuario.IdEstadoUsuario = 1;
                 usuario.CreationDate = DateTime.UtcNow;
                 usuario.ModifiedDate = DateTime.UtcNow;
 
                 bool state = await _usuarioRepo.Create(usuario);
 
                 result.UserMessage = state ?
-                    $"El usuario { usuario.Nombre } fue creado corretamente" : $"El usuario no pudo crearse";
+                    $"El usuario { usuario.Nombre } { usuario.Apellido } fue creado corretamente" : $"El usuario no pudo crearse";
                 result.InternalMessage = $"LOGIC.Services.UsuarioService: CreateUsuario() method executed successfully";
                 result.Success = true;
                 result.ResultSet = state;
             }
             catch (Exception exception)
             {
-                result.UserMessage = $"Ocurrió un error, por lo que el usuario { usuario.Nombre } no pudo ser creado";
+                result.UserMessage = $"Ocurrió un error, por lo que el usuario { usuario.Nombre } { usuario.Apellido } no pudo ser creado";
                 result.InternalMessage = $"ERROR: LOGIC.Services.UsuarioService: CreateUsuario(): { exception.Message }";
                 result.Exception = exception;
             }

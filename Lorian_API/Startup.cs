@@ -1,4 +1,5 @@
 using LOGIC.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -37,6 +38,11 @@ namespace Lorian_API
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Lorian_API", Version = "v1" });
             });
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options => {
+                    
+                });
 
             #region AutoMapper
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -111,6 +117,7 @@ namespace Lorian_API
                 RequestPath = new PathString("/Resources")
             });
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
