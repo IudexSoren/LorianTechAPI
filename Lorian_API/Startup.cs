@@ -39,10 +39,15 @@ namespace Lorian_API
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Lorian_API", Version = "v1" });
             });
 
+            #region Authentication
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(options => {
-                    
+                .AddCookie(options =>
+                {
+                    options.ExpireTimeSpan = TimeSpan.FromHours(3);
+                    options.SlidingExpiration = true;
+                    options.AccessDeniedPath = "/api/Auth/AccessDenied";
                 });
+            #endregion
 
             #region AutoMapper
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -52,6 +57,7 @@ namespace Lorian_API
             services.AddScoped<CaracteristicaService>();
             services.AddScoped<ComponenteService>();
             services.AddScoped<ConversacionService>();
+            services.AddScoped<DireccionService>();
             services.AddScoped<EstadoComponenteService>();
             services.AddScoped<EstadoEnvioService>();
             services.AddScoped<EstadoMensajeService>();
@@ -59,6 +65,8 @@ namespace Lorian_API
             services.AddScoped<MarcaService>();
             services.AddScoped<PromocionService>();
             services.AddScoped<RolService>();
+            services.AddScoped<TarjetaService>();
+            services.AddScoped<TelefonoService>();
             services.AddScoped<TipoComponenteService>();
             services.AddScoped<TipoTarjetaService>();
             services.AddScoped<TipoUsuarioMensajeService>();

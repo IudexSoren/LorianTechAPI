@@ -94,5 +94,11 @@ namespace Lorian_API.Controllers
 
             return Ok();
         }
+
+        [HttpGet("AccessDenied")]
+        public IActionResult AccessDenied()
+        {
+            return Unauthorized("Usted no tiene permisos para acceder a este contenido");
+        }
     }
 }

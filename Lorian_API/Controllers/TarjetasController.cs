@@ -4,34 +4,35 @@ using ENTITIES.Entities;
 using FluentValidation.Results;
 using LOGIC.Services;
 using LOGIC.Validators;
+using LOGIC.Validators.Tarjeta;
 using Lorian_API.Helpers;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Lorian_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsuariosController : ControllerBase
+    public class TarjetasController : ControllerBase
     {
-        private readonly UsuarioService _usuarioService;
+        private readonly TarjetaService _tarjetaService;
         private readonly IMapper _mapper;
 
-        public UsuariosController(UsuarioService usuarioService, IMapper mapper)
+        public TarjetasController(TarjetaService rolService, IMapper mapper)
         {
-            this._usuarioService = usuarioService;
+            this._tarjetaService = rolService;
             this._mapper = mapper;
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetUsuario(int id)
+        public async Task<IActionResult> GetTarjeta(int id)
         {
-            var result = await _usuarioService.ReadUsuario(id);
+            var result = await _tarjetaService.ReadTarjeta(id);
             switch (result.Success)
             {
                 case true:
@@ -49,11 +50,10 @@ namespace Lorian_API.Controllers
             }
         }
 
-        [Authorize(Roles = "Administrador, Despachador, Cliente")]
         [HttpGet]
-        public async Task<IActionResult> GetAllUsuario()
+        public async Task<IActionResult> GetAllTarjeta(int? idUsuario)
         {
-            var result = await _usuarioService.ReadAllUsuario();
+            var result = await _tarjetaService.ReadAllTarjeta(idUsuario);
             switch (result.Success)
             {
                 case true:
@@ -64,18 +64,41 @@ namespace Lorian_API.Controllers
             }
         }
 
-        [HttpPut]
-        public async Task<IActionResult> UpdateUsuario(int id, DTOUsuarioUpdate usuarioUpdateDTO)
+        [HttpPost]
+        public async Task<IActionResult> CreateTarjeta(DTOTarjetaCreate tarjetaCreateDTO)
         {
-            UsuarioU_DTOValidator validator = new UsuarioU_DTOValidator(id);
-            ValidationResult results = await validator.ValidateAsync(usuarioUpdateDTO);
+            TarjetaC_DTOValidator validator = new TarjetaC_DTOValidator();
+            Console.WriteLine(Regex.IsMatch(tarjetaCreateDTO.Numero, "([0-9]{4}-*){19}"));
+            ValidationResult results = await validator.ValidateAsync(tarjetaCreateDTO);
             if (!results.IsValid)
             {
                 return BadRequest(Validator.ListarErrores(results.Errors));
             }
 
-            var usuario = _mapper.Map<Usuario>(usuarioUpdateDTO);
-            var result = await _usuarioService.UpdateUsuario(id, usuario);
+            var tarjeta = _mapper.Map<Tarjeta>(tarjetaCreateDTO);
+            var result = await _tarjetaService.CreateTarjeta(tarjeta);
+            switch (result.Success)
+            {
+                case true:
+                    return Ok(result);
+
+                case false:
+                    return StatusCode(500, result);
+            }
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateTarjeta(int id, DTOTarjetaUpdate tarjetaUpdateDTO)
+        {
+            TarjetaU_DTOValidator validator = new TarjetaU_DTOValidator();
+            ValidationResult results = await validator.ValidateAsync(tarjetaUpdateDTO);
+            if (!results.IsValid)
+            {
+                return BadRequest(Validator.ListarErrores(results.Errors));
+            }
+
+            var tarjeta = _mapper.Map<Tarjeta>(tarjetaUpdateDTO);
+            var result = await _tarjetaService.UpdateTarjeta(id, tarjeta);
             switch (result.Success)
             {
                 case true:
@@ -94,9 +117,9 @@ namespace Lorian_API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUsuario(int id)
+        public async Task<IActionResult> DeleteTarjeta(int id)
         {
-            var result = await _usuarioService.DeleteUsuario(id);
+            var result = await _tarjetaService.DeleteTarjeta(id);
             switch (result.Success)
             {
                 case true:

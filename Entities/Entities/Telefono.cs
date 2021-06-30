@@ -10,7 +10,5 @@ namespace ENTITIES.Entities
         public int Id { get; set; }
         public int IdUsuario { get; set; }
         public string Numero { get; set; }
-
-        public Usuario Usuario { get; set; }
     }
 }

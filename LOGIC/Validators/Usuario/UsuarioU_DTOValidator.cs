@@ -1,5 +1,6 @@
 ﻿using ENTITIES.DTOs;
 using FluentValidation;
+using LOGIC.LogicEntities;
 using LOGIC.Services;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ namespace LOGIC.Validators
 {
     public class UsuarioU_DTOValidator : AbstractValidator<DTOUsuarioUpdate>
     {
-        public UsuarioU_DTOValidator()
+        public UsuarioU_DTOValidator(int idUsuario)
         {
             RuleFor(uu => uu.Email)
                 .Cascade(CascadeMode.Stop)
@@ -37,6 +38,23 @@ namespace LOGIC.Validators
                 .NotEmpty().WithMessage("El apellido es un dato requerido")
                 .MaximumLength(100).WithMessage("El apellido no debe exceder los 100 caracteres. Actual: {PropertyValue}");
 
+            RuleFor(uu => uu.ClaveActual)
+                .Cascade(CascadeMode.Stop)
+                .NotEmpty().WithMessage("La contraseña actual es un dato requerido")
+                .Length(8, 32).WithMessage("La contraseña actual debe ser de almenos 8 caracteres y no debe exceder los 32 caracteres")
+                .MustAsync(async (claveActual, cancellation) =>
+                {
+                    var res = await UsuarioService.ReadSimple(idUsuario);
+                    if (res != null)
+                    {
+                        UsuarioLogic usuarioLogic = new UsuarioLogic();
+
+                        return usuarioLogic.CompararClaves(res.Clave, claveActual);
+                    }
+
+                    return false;
+                }).WithMessage("La contraseña actual es incorrecta");
+
             RuleFor(uu => uu.Clave)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty().WithMessage("La contraseña es un dato requerido")
@@ -46,7 +64,7 @@ namespace LOGIC.Validators
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty().WithMessage("Debe confirmar su contraseña")
                 .Length(8, 32).WithMessage("La contraseña de confirmación debe ser de almenos 8 caracteres y no debe exceder los 32 caracteres")
-                .Must((uc, confClave) => confClave.Equals(uc.Clave)).WithMessage("Las contraseñas no coinciden");
+                .Must((uu, confClave) => confClave.Equals(uu.Clave)).WithMessage("Las contraseñas no coinciden");
 
             RuleFor(uu => uu.EmailVerificado)
                 .NotEmpty().WithMessage("Debe indicar si el correo electrónico está verificado");

@@ -61,7 +61,7 @@ namespace LOGIC.LogicEntities
             return passwordHashed;
         }
 
-        private bool CompararClaves(string claveCorrecta, string claveActual)
+        public bool CompararClaves(string claveCorrecta, string claveActual)
         {
             bool coincide = false;
 
@@ -79,7 +79,8 @@ namespace LOGIC.LogicEntities
                 {
                     coincide = false;
                     break;
-                } else
+                }
+                else
                 {
                     coincide = true;
                 }
@@ -96,6 +97,7 @@ namespace LOGIC.LogicEntities
             claims.Add(new Claim(ClaimTypes.Name, dtoUsuario.Nombre));
             claims.Add(new Claim(ClaimTypes.Surname, dtoUsuario.Apellido));
             claims.Add(new Claim(ClaimTypes.Role, dtoUsuario.Rol.Nombre));
+
 
             return claims;
         }
