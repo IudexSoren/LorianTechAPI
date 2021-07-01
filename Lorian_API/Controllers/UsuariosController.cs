@@ -49,7 +49,7 @@ namespace Lorian_API.Controllers
             }
         }
 
-        [Authorize(Roles = "Administrador, Despachador, Cliente")]
+        [Authorize(Roles = "Administrador, Despachador")]
         [HttpGet]
         public async Task<IActionResult> GetAllUsuario()
         {

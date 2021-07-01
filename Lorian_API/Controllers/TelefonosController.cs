@@ -10,27 +10,28 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Lorian_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TarjetasController : ControllerBase
+    public class TelefonosController : ControllerBase
     {
-        private readonly TarjetaService _tarjetaService;
+        private readonly TelefonoService _telefonoService;
         private readonly IMapper _mapper;
 
-        public TarjetasController(TarjetaService tarjetaService, IMapper mapper)
+        public TelefonosController(TelefonoService telefonoService, IMapper mapper)
         {
-            this._tarjetaService = tarjetaService;
+            this._telefonoService = telefonoService;
             this._mapper = mapper;
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetTarjeta(int id)
+        public async Task<IActionResult> GetTelefono(int id)
         {
-            var result = await _tarjetaService.ReadTarjeta(id);
+            var result = await _telefonoService.ReadTelefono(id);
             switch (result.Success)
             {
                 case true:
@@ -49,9 +50,9 @@ namespace Lorian_API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllTarjeta(int? idUsuario)
+        public async Task<IActionResult> GetAllTelefono(int? idUsuario)
         {
-            var result = await _tarjetaService.ReadAllTarjeta(idUsuario);
+            var result = await _telefonoService.ReadAllTelefono(idUsuario);
             switch (result.Success)
             {
                 case true:
@@ -63,17 +64,17 @@ namespace Lorian_API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateTarjeta(DTOTarjetaCreate tarjetaCreateDTO)
+        public async Task<IActionResult> CreateTelefono(DTOTelefonoCreate telefonoCreateDTO)
         {
-            TarjetaC_DTOValidator validator = new TarjetaC_DTOValidator();
-            ValidationResult results = await validator.ValidateAsync(tarjetaCreateDTO);
+            TelefonoC_DTOValidator validator = new TelefonoC_DTOValidator();
+            ValidationResult results = await validator.ValidateAsync(telefonoCreateDTO);
             if (!results.IsValid)
             {
                 return BadRequest(Validator.ListarErrores(results.Errors));
             }
 
-            var tarjeta = _mapper.Map<Tarjeta>(tarjetaCreateDTO);
-            var result = await _tarjetaService.CreateTarjeta(tarjeta);
+            var telefono = _mapper.Map<Telefono>(telefonoCreateDTO);
+            var result = await _telefonoService.CreateTelefono(telefono);
             switch (result.Success)
             {
                 case true:
@@ -85,17 +86,17 @@ namespace Lorian_API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateTarjeta(int id, DTOTarjetaUpdate tarjetaUpdateDTO)
+        public async Task<IActionResult> UpdateTelefono(int id, DTOTelefonoUpdate telefonoUpdateDTO)
         {
-            TarjetaU_DTOValidator validator = new TarjetaU_DTOValidator();
-            ValidationResult results = await validator.ValidateAsync(tarjetaUpdateDTO);
+            TelefonoU_DTOValidator validator = new TelefonoU_DTOValidator();
+            ValidationResult results = await validator.ValidateAsync(telefonoUpdateDTO);
             if (!results.IsValid)
             {
                 return BadRequest(Validator.ListarErrores(results.Errors));
             }
 
-            var tarjeta = _mapper.Map<Tarjeta>(tarjetaUpdateDTO);
-            var result = await _tarjetaService.UpdateTarjeta(id, tarjeta);
+            var telefono = _mapper.Map<Telefono>(telefonoUpdateDTO);
+            var result = await _telefonoService.UpdateTelefono(id, telefono);
             switch (result.Success)
             {
                 case true:
@@ -114,9 +115,9 @@ namespace Lorian_API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTarjeta(int id)
+        public async Task<IActionResult> DeleteTelefono(int id)
         {
-            var result = await _tarjetaService.DeleteTarjeta(id);
+            var result = await _telefonoService.DeleteTelefono(id);
             switch (result.Success)
             {
                 case true:

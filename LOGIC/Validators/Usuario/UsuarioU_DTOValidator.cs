@@ -23,12 +23,13 @@ namespace LOGIC.Validators
                     {
                         if (usuario.Email.Equals(email))
                         {
-                            return false;
+                            return true;
                         }
                     }
-                    return true;
+
+                    return false;
                 })
-                .WithMessage("El correo electrónico: {PropertyValue}, ya está registrado");
+                .WithMessage("El correo electrónico: {PropertyValue} no está registrado");
 
             RuleFor(uu => uu.Nombre)
                 .NotEmpty().WithMessage("El nombre es un dato requerido")

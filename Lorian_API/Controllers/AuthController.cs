@@ -7,9 +7,11 @@ using LOGIC.Services;
 using LOGIC.Validators;
 using Lorian_API.Helpers;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -67,9 +69,22 @@ namespace Lorian_API.Controllers
             {
                 UsuarioLogic usuarioLogic = new UsuarioLogic();
                 DTOUsuarioRead dtoUsuario = await usuarioLogic.Validar(this._mapper, usuarioLoginDTO.Email, usuarioLoginDTO.Clave);
-
                 ClaimsPrincipal claimsPrincipal = usuarioLogic.CreateClaimsPrincipal(dtoUsuario);
                 await HttpContext.SignInAsync(claimsPrincipal);
+
+                var cookies = HttpContext.Response.Headers.Values;
+                string cookieToken = "";
+                foreach (var cookie in cookies)
+                {
+                    if (cookie.ToString().Contains("access_token"))
+                    {
+                        cookieToken = cookie;
+                        break;
+                    }
+                }
+                string[] token = cookieToken.Split("=");
+                token = token[1].Split(";");
+                dtoUsuario.Token = token[0];
 
                 return Ok(dtoUsuario);
             }
@@ -92,13 +107,19 @@ namespace Lorian_API.Controllers
         {
             await HttpContext.SignOutAsync();
 
-            return Ok();
+            return Ok("Sesión concluida");
         }
 
         [HttpGet("AccessDenied")]
         public IActionResult AccessDenied()
         {
             return Unauthorized("Usted no tiene permisos para acceder a este contenido");
+        }
+
+        [HttpGet("LoginRequired")]
+        public IActionResult LoginRequired()
+        {
+            return BadRequest("Debe iniciar sesión o registrarse, y poseer los permisos para acceder a este contenido");
         }
     }
 }

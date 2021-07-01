@@ -16,21 +16,21 @@ namespace Lorian_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TarjetasController : ControllerBase
+    public class DireccionesController : ControllerBase
     {
-        private readonly TarjetaService _tarjetaService;
+        private readonly DireccionService _direccionService;
         private readonly IMapper _mapper;
 
-        public TarjetasController(TarjetaService tarjetaService, IMapper mapper)
+        public DireccionesController(DireccionService direccionService, IMapper mapper)
         {
-            this._tarjetaService = tarjetaService;
+            this._direccionService = direccionService;
             this._mapper = mapper;
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetTarjeta(int id)
+        public async Task<IActionResult> GetDireccion(int id)
         {
-            var result = await _tarjetaService.ReadTarjeta(id);
+            var result = await _direccionService.ReadDireccion(id);
             switch (result.Success)
             {
                 case true:
@@ -49,9 +49,9 @@ namespace Lorian_API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllTarjeta(int? idUsuario)
+        public async Task<IActionResult> GetAllDireccion(int? idUsuario)
         {
-            var result = await _tarjetaService.ReadAllTarjeta(idUsuario);
+            var result = await _direccionService.ReadAllDireccion(idUsuario);
             switch (result.Success)
             {
                 case true:
@@ -63,17 +63,17 @@ namespace Lorian_API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateTarjeta(DTOTarjetaCreate tarjetaCreateDTO)
+        public async Task<IActionResult> CreateDireccion(DTODireccionCreate direccionCreateDTO)
         {
-            TarjetaC_DTOValidator validator = new TarjetaC_DTOValidator();
-            ValidationResult results = await validator.ValidateAsync(tarjetaCreateDTO);
+            DireccionC_DTOValidator validator = new DireccionC_DTOValidator();
+            ValidationResult results = await validator.ValidateAsync(direccionCreateDTO);
             if (!results.IsValid)
             {
                 return BadRequest(Validator.ListarErrores(results.Errors));
             }
 
-            var tarjeta = _mapper.Map<Tarjeta>(tarjetaCreateDTO);
-            var result = await _tarjetaService.CreateTarjeta(tarjeta);
+            var direccion = _mapper.Map<Direccion>(direccionCreateDTO);
+            var result = await _direccionService.CreateDireccion(direccion);
             switch (result.Success)
             {
                 case true:
@@ -85,17 +85,17 @@ namespace Lorian_API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateTarjeta(int id, DTOTarjetaUpdate tarjetaUpdateDTO)
+        public async Task<IActionResult> UpdateDireccion(int id, DTODireccionUpdate direccionUpdateDTO)
         {
-            TarjetaU_DTOValidator validator = new TarjetaU_DTOValidator();
-            ValidationResult results = await validator.ValidateAsync(tarjetaUpdateDTO);
+            DireccionU_DTOValidator validator = new DireccionU_DTOValidator();
+            ValidationResult results = await validator.ValidateAsync(direccionUpdateDTO);
             if (!results.IsValid)
             {
                 return BadRequest(Validator.ListarErrores(results.Errors));
             }
 
-            var tarjeta = _mapper.Map<Tarjeta>(tarjetaUpdateDTO);
-            var result = await _tarjetaService.UpdateTarjeta(id, tarjeta);
+            var direccion = _mapper.Map<Direccion>(direccionUpdateDTO);
+            var result = await _direccionService.UpdateDireccion(id, direccion);
             switch (result.Success)
             {
                 case true:
@@ -114,9 +114,9 @@ namespace Lorian_API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTarjeta(int id)
+        public async Task<IActionResult> DeleteDireccion(int id)
         {
-            var result = await _tarjetaService.DeleteTarjeta(id);
+            var result = await _direccionService.DeleteDireccion(id);
             switch (result.Success)
             {
                 case true:

@@ -46,8 +46,11 @@ namespace LOGIC.Services
                 Tarjeta tarjeta = await _tarjetaRepo.Read(id);
                 if (tarjeta != null)
                 {
+                    string digitos_15 = tarjeta.Numero.Substring(15, 4);
+                    tarjeta.Numero = $"****-****-****-{ digitos_15 }";
                     tarjeta.TipoTarjeta = await TipoTarjetaService.ReadSimple(tarjeta.IdTipoTarjeta);
                 }
+
 
                 result.UserMessage = tarjeta != null ?
                     $"La tarjeta fue obtenida corretamente" : $"La tarjeta solicitada no existe";
@@ -75,6 +78,8 @@ namespace LOGIC.Services
 
                 foreach (var tarjeta in tarjetas)
                 {
+                    string digitos_15 = tarjeta.Numero.Substring(15, 4);
+                    tarjeta.Numero = $"****-****-****-{ digitos_15 }";
                     tarjeta.TipoTarjeta = await TipoTarjetaService.ReadSimple(tarjeta.IdTipoTarjeta);
                 }
 
@@ -146,6 +151,11 @@ namespace LOGIC.Services
             try
             {
                 Tarjeta tarjeta = await new TarjetaRepo().Read(id);
+                if (tarjeta != null)
+                {
+                    string digitos_15 = tarjeta.Numero.Substring(15, 4);
+                    tarjeta.Numero = $"****-****-****-{ digitos_15 }";
+                }
 
                 return tarjeta;
             }
@@ -160,6 +170,11 @@ namespace LOGIC.Services
             try
             {
                 List<Tarjeta> tarjetas = await new TarjetaRepo().ReadAll();
+                foreach (var tarjeta in tarjetas)
+                {
+                    string digitos_15 = tarjeta.Numero.Substring(15, 4);
+                    tarjeta.Numero = $"****-****-****-{ digitos_15 }";
+                }
 
                 return tarjetas;
             }

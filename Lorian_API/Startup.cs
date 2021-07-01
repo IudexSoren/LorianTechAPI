@@ -40,12 +40,20 @@ namespace Lorian_API
             });
 
             #region Authentication
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            })
                 .AddCookie(options =>
                 {
                     options.ExpireTimeSpan = TimeSpan.FromHours(3);
                     options.SlidingExpiration = true;
                     options.AccessDeniedPath = "/api/Auth/AccessDenied";
+                    options.LoginPath = "/api/Auth/LoginRequired";
+                    options.Cookie.Name = "access_token";
+                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                 });
             #endregion
 

@@ -60,7 +60,7 @@ namespace DAL.Repositories
                     if (idsPromociones != null && state)
                     {
                         Promocion_ComponenteRepo pcr = new Promocion_ComponenteRepo();
-                        foreach (int id in idsCaracteristicas)
+                        foreach (int id in idsPromociones)
                         {
                             Promocion_Componente pc = new Promocion_Componente()
                             {
